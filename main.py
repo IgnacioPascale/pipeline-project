@@ -1,7 +1,7 @@
 from settings import pathSettings, ftpSettings
-from ticnovaExtraction import fileInput
-from ticnovaTransformation import transform, export
-from ticnovaLoad import ftpLoad
+from extraction import fileInput
+from transformation import transform, export
+from load import ftpLoad
 
 if __name__ == "__main__":
     dframes = fileInput().rawfileReader(pathSettings.Input)

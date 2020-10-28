@@ -28,8 +28,8 @@ The pipeline consists of the following modules:
 
 In order to read the stored paths, .ini files that contain this information are needed in place for the pipeline to work. These should be:
 
-- `ftpConfigTicnova.ini` contains all related paths through the ftp server
-- `pathConfigTicnova.ini` which contains all related paths through the local server
+- `ftpConfig.ini` contains all related paths through the ftp server
+- `pathConfig.ini` which contains all related paths through the local server
 
 The .ini files were not committed for security reasons. These will be shared in a different way.
 

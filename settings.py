@@ -7,7 +7,7 @@ class ftpSettings():
 
     def __init__(self):
         pass
-    config.read('ftpConfigTicnova.ini')
+    config.read('ftpConfig.ini')
 
     user = config['credentials']['user']
     password = config['credentials']['password']
@@ -22,7 +22,7 @@ class pathSettings():
     def __init__(self):
         pass
 
-    config.read('pathConfigTicnova.ini')
+    config.read('pathConfig.ini')
     ini_Input =config['path']['input']
     Input = ini_Input+ WeekNumber + "/"
     Output =config['path']['output']
