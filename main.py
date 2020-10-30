@@ -1,11 +1,28 @@
-from settings import pathSettings, ftpSettings
-from extraction import fileInput
-from transformation import transform, export
-from load import ftpLoad
+from settings import *
+from extraction import FileInput
+from transformation import Transform, Export
+from load import FtpLoad
+from quality_check import QualityCheck as qc
 
 if __name__ == "__main__":
-    dframes = fileInput().rawfileReader(pathSettings.Input)
-    results = transform().transformFiles(dframes)
-    transform().showResults(results)
-    export().exportData(results,pathSettings.Output,pathSettings.FileName)
-    ftpLoad().loadFile(ftpSettings.server,ftpSettings.user,ftpSettings.password,ftpSettings.Input,ftpSettings.Output,ftpSettings.FileName)
+
+    # Slice lines and download files from ftp
+    lines = FtpLoad().get_lines(FtpSettings.ftp_input)
+    download = FtpLoad().slice(lines, WeekNumber)
+
+    for i in download:
+        FtpLoad().download_file(i, FtpSettings.ftp_input, PathSettings.ini_Input, WeekNumber)
+
+    # Rename files
+    FtpLoad().rename_files(PathSettings.ini_Input, WeekNumber)
+
+    # Transform files
+    dframes = FileInput().rawfile_reader(PathSettings.input)
+    results = Transform().transform_files(dframes)
+
+    # Quality Check
+    qc().show_summary(results)
+
+    # Export results
+    Export().export_data(results, PathSettings.output, PathSettings.file_name)
+    FtpLoad().load_file(FtpSettings.input, FtpSettings.output, FtpSettings.file_name)
