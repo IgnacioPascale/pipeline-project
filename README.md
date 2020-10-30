@@ -4,12 +4,12 @@
 
 This company used to send 5 or 6 different files each week. These are:
 
-- `APP`
-- `APP Online` (not very usual)
-- `PC BOX`
-- `BEEP BOX`
-- `LFC`
-- `NEW`
+- `X1`
+- `X1 Online` (not very usual)
+- `X2 B`
+- `X3 B`
+- `X4`
+- `X5`
 
 This pipeline receives raw data on ftp, downloads the file on the local server, performs transformations and outputs one file with the normalised data on the local server and the ftp server.
 
@@ -84,23 +84,22 @@ Typing the number of the week whose files we want to transform will initialize d
 All files will be found in the local ftp. The methods associated with `load.py` loop over these file names and extract them in the local server. Then, the methods in `extraction.py` will first rename the files (by slicing over the numbers before "*_SEMANA") and store the datasets in dictionaries with "file type" ("app", "new", etc) as keys and data frames as values.
 
 ```shell
-Logged XXXXXXXXXXXXXXXXX_SEMANA 29-2020 PC BOX.xlsx
-Logged XXXXXXXXXXXXXXXXX_SEMANA 29-2020 LFC.xlsx
-Logged XXXXXXXXXXXXXXXXX_SEMANA 29-2020 BEEP BOX.xlsx
-Logged XXXXXXXXXXXXXXXXX_SEMANA 29-2020 NEW.xlsx
-Logged XXXXXXXXXXXXXXXXX_SEMANA 29-2020 APP.xlsx
-Successfully downloaded XXXXXXXXXXXXXXXXX_SEMANA 29-2020 PC BOX.xlsx
-Successfully downloaded XXXXXXXXXXXXXXXXX_SEMANA 29-2020 LFC.xlsx
-Successfully downloaded XXXXXXXXXXXXXXXXX_SEMANA 29-2020 BEEP BOX.xlsx
-Successfully downloaded XXXXXXXXXXXXXXXXX_SEMANA 29-2020 NEW.xlsx
-Successfully downloaded XXXXXXXXXXXXXXXXX_SEMANA 29-2020 APP.xlsx
+Logged XXXXXXXXXXXXXXXXX_WEEK 29-2020 X2 B.xlsx
+Logged XXXXXXXXXXXXXXXXX_WEEK 29-2020 X4.xlsx
+Logged XXXXXXXXXXXXXXXXX_WEEK 29-2020 X3 B.xlsx
+Logged XXXXXXXXXXXXXXXXX_WEEK 29-2020 X5.xlsx
+Logged XXXXXXXXXXXXXXXXX_WEEK 29-2020 X1.xlsx
+Successfully downloaded XXXXXXXXXXXXXXXXX_WEEK 29-2020 X2 B.xlsx
+Successfully downloaded XXXXXXXXXXXXXXXXX_WEEK 29-2020 X4.xlsx
+Successfully downloaded XXXXXXXXXXXXXXXXX_WEEK 29-2020 X3 B.xlsx
+Successfully downloaded XXXXXXXXXXXXXXXXX_WEEK 29-2020 X5.xlsx
+Successfully downloaded XXXXXXXXXXXXXXXXX_wEEK 29-2020 X1.xlsx
 
-XXXXXXXXXXXXXXXXX_SEMANA 29-2020 PC BOX.xlsx was renamed to SEMANA 29-2020 PC BOX.xlsx
-XXXXXXXXXXXXXXXXX_SEMANA 29-2020 LFC.xlsx was renamed to SEMANA 29-2020 LFC.xlsx
-XXXXXXXXXXXXXXXXX_SEMANA 29-2020 BEEP BOX.xlsx was renamed to SEMANA 29-2020 BEEP BOX.xlsx
-XXXXXXXXXXXXXXXXX_SEMANA 29-2020 NEW.xlsx was renamed to SEMANA 29-2020 NEW.xlsx
-XXXXXXXXXXXXXXXXX_SEMANA 29-2020 APP.xlsx was renamed to SEMANA 29-2020 APP.xlsx
-
+XXXXXXXXXXXXXXXXX_WEEK 29-2020 X2 B.xlsx was renamed to WEEK 29-2020 X2 B.xlsx
+XXXXXXXXXXXXXXXXX_WEEK 29-2020 X4.xlsx was renamed to WEEK 29-2020 X4.xlsx
+XXXXXXXXXXXXXXXXX_WEEK 29-2020 X3 B.xlsx was renamed to WEEK 29-2020 X3 B.xlsx
+XXXXXXXXXXXXXXXXX_WEEK 29-2020 X5.xlsx was renamed to WEEK 29-2020 X5.xlsx
+XXXXXXXXXXXXXXXXX_wEEK 29-2020 X1.xlsx was renamed to WEEK 29-2020 X1.xlsx
 
 ```
 
@@ -137,17 +136,17 @@ Once the transformation is done, the method `export_data` in `extraction.py` wil
 This is what the process looks like on the shell
 
 ```shell
-Logged SEMANA 29-2020 APP.xlsx
-Logged SEMANA 29-2020 BEEP BOX.xlsx
-Logged SEMANA 29-2020 LFC.xlsx
-Logged SEMANA 29-2020 NEW.xlsx
-Logged SEMANA 29-2020 PC BOX.xlsx
+Logged WEEK 29-2020 X1.xlsx
+Logged WEEK 29-2020 X2 B.xlsx
+Logged WEEK 29-2020 X4.xlsx
+Logged WEEK 29-2020 X5.xlsx
+Logged WEEK 29-2020 X3 B.xlsx
 
-transforming... APP
-transforming... BEEP BOX
-transforming... LFC
-transforming... NEW
-transforming... PC BOX
+transforming... X1
+transforming... X2 B
+transforming... X4
+transforming... X5
+transforming... X3 B
 
 xxxx.csv was succesfully exported to //.../transformed/
 xxxx.csv was loaded successfully on ftp /.../transformed/
@@ -159,27 +158,27 @@ The method `quality_check(final_df)` will deliver a comparison between the summa
 
 ```shell
 -----------
-APP Quality Check - Week:  29
+X1 Quality Check - Week:  29
           File   Units        Revenue
 0     Original  XXXX            XXXX
 1  Transformed  YYYY            YYYY
 ------------
-PC BOX Quality Check - Week:  29
+X2 B Quality Check - Week:  29
           File   Units        Revenue
 0     Original  XXXX            XXXX
 1  Transformed  YYYY            YYYY
 ------------
-BEEP BOX Quality Check - Week:  29
+X3 B Quality Check - Week:  29
           File   Units        Revenue
 0     Original  XXXX            XXXX
 1  Transformed  YYYY            YYYY
 ------------
-NEW Quality Check - Week:  29
+X4 Quality Check - Week:  29
           File   Units        Revenue
 0     Original  XXXX            XXXX
 1  Transformed  YYYY            YYYY
 ------------
-LFC Quality Check - Week:  29
+X5 Quality Check - Week:  29
           File   Units        Revenue
 0     Original  XXXX            XXXX
 1  Transformed  YYYY            YYYY
