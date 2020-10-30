@@ -1,16 +1,16 @@
 # basic lib
 import pandas as pd
 
-class transform():
+class Transform:
+
     def __init__(self):
         pass
     
-    def preSet(self,df):
+    def pre_settings(self, df):
         """
         preSet will establish the preliminar settings for each dataframe.
         It receives a dataframe and returns the transformed version of it. 
         Since the "File Reader" already standardized all the datasets in the dict, the methodology will be the same for each of them.
-
         """
         df.drop(df.head(2).index, inplace=True) # delete first 2 rows
         df.drop(df.tail(1).index, inplace=True) # delete last row
@@ -20,10 +20,9 @@ class transform():
 
         return df
 
-    def prepFile(self, df):
+    def prep_file(self, df):
         """
         prep will contain all columns with sale info and the third column which contains PARTNER_PRODUCT_CODE
-
         """
         df = pd.concat([df.iloc[:,2], df.iloc[:,6:len(df.columns)]], axis=1)
         df.iloc[0,0] = 'PARTNER_PRODUCT_CODE' # Set_Value is deprecated 15/05
@@ -34,7 +33,7 @@ class transform():
 
         return df
 
-    def getDetail(self,df):
+    def get_detail(self, df):
 
         df.columns = ['CATEGORY_LEVEL_1','CATEGORY_LEVEL_2','PARTNER_PRODUCT_CODE','PRODUCT_NAME','MANUFACTURER_PART_NUMBER','BRAND_CODE','TYPE']
         df.drop(df.head(2).index, inplace=True) #Eliminate first 2 rows
@@ -44,14 +43,14 @@ class transform():
         
         return df
 
-    def setPrice(self,df):
+    def set_price(self, df):
         df = df.set_index(df.columns[0])
         df = df.stack().reset_index() # Stack() will normalize the frame
         df.columns = ['PARTNER_PRODUCT_CODE','STORES','SALES_REVENUE']
 
         return df
 
-    def setUnit(self,df):
+    def set_unit(self, df):
         df = df.set_index(df.columns[0])
         df = df.stack().reset_index()
         df.columns = ['PARTNER_PRODUCT_CODE','STORES','SALES_QUANTITY']
@@ -59,36 +58,38 @@ class transform():
         return df
 
 
-    def stores(self,pricing, units, column_numbers):
+   # def stores(self,pricing, units, column_numbers):
         # Merge dataframes
-        df = pd.concat([pricing,units], join='inner', axis = 1)
-            # Columns 3 and 4 will be repeated and we don't want them there. 
-            ##Since they have the same name as columns 1 and 2, we need to eliminate them in an unthordoxed way.
-             ## That is using.iloc with a list that does not cotain those columns
-        column_numbers = [x for x in range(df.shape[1])]  # list of columns' integer indices
-        column_numbers.remove(3)
-        column_numbers.remove(4)
+    #    df = pd.concat([pricing,units], join='inner', axis = 1)
+    #    """
+    #        Columns 3 and 4 will be repeated and we don't want them there.
+    #        Since they have the same name as columns 1 and 2, we need to eliminate them in an unthordoxed way.
+    #        That is using.iloc with a list that does not cotain those columns
+    #    """
+    #    column_numbers = [x for x in range(df.shape[1])]  # list of columns' integer indices
+    #    column_numbers.remove(3)
+    #    column_numbers.remove(4)
             # We will also eliminate empty spaces
-        df = df[df['SALES_REVENUE']!=""].iloc[:, column_numbers]
+    #    df = df[df['SALES_REVENUE'] != ""].iloc[:, column_numbers]
 
-        return df
+    #    return df
 
-    def getLastColumn(self, df):
-        lastColumn = df.iloc[:,len(df.columns)-1]
+    def get_last_column(self, df):
+        last_column = df.iloc[:, len(df.columns)-1]
 
-        return lastColumn
+        return last_column
 
 
-    def showResults(self,df):
-        df = df.loc[:,['TYPE','SALES_QUANTITY','SALES_REVENUE']].groupby('TYPE').sum()
+    def show_results(self, df):
+        df = df.loc[:, ['TYPE', 'SALES_QUANTITY', 'SALES_REVENUE']].groupby('TYPE').sum()
         print(df)
     
-    def dictToFrame(self, dictionary):
+    def dict_to_frame(self, dictionary):
         df = pd.concat(dictionary[i] for i in dictionary.keys())
         return df
    
 
-    def transformFiles(self, dframes):
+    def transform_files(self, dframes):
 
         """
         transformFiles will perform the transformation process.
@@ -116,7 +117,7 @@ class transform():
             types[k] = dframes[k].iloc[:,len(dframes[k].columns)-1]
             # Establish preliminar settings to standardize the datasets.
 
-            dframes[k] = self.preSet(dframes[k])
+            dframes[k] = self.pre_settings(dframes[k])
 
             # From here there will be a bifurcation in datasets:
             #       Details: with product data
@@ -126,12 +127,12 @@ class transform():
             #       - merge type column with the rest
             #       - apply "details" transformation
             details[k] = pd.concat([dframes[k].iloc[:,0:6], types[k]],axis=1)
-            details[k] = self.getDetail(details[k])
+            details[k] = self.get_detail(details[k])
 
             # In Prep:
             #       - apply "prep" transformation
             #       - apply both units and price transformation and bifurcate again in 2 different dataFrames.
-            prep[k] = self.prepFile(dframes[k])
+            prep[k] = self.prep_file(dframes[k])
 
             # "BOX" files will have Rev,Qty and so on
             # The rest will have Qty,Rev and so on.
@@ -143,8 +144,8 @@ class transform():
                 pricing[k] = prep[k].iloc[:,0:len(prep[k].columns):2]
                 units[k] = pd.concat([prep[k].iloc[:,0], prep[k].iloc[:,1:len(prep[k].columns):2]], axis=1) # Starting from the 2nd column, take each column every 2 columns. Also add the PARTNER_PRODUCT_CODE
 
-            pricing[k] = self.setPrice(pricing[k])
-            units[k] = self.setUnit(units[k])
+            pricing[k] = self.set_price(pricing[k])
+            units[k] = self.set_unit(units[k])
 
 
             # Merge dataframes
@@ -152,7 +153,7 @@ class transform():
             column_numbers[k] = [x for x in range(stores_pp[k].shape[1])]  # list of columns' integer indices
             column_numbers[k].remove(3)
             column_numbers[k].remove(4)
-            stores_pp[k] = stores_pp[k][stores_pp[k]['SALES_REVENUE']!=""].iloc[:, column_numbers[k]]
+            stores_pp[k] = stores_pp[k][stores_pp[k]['SALES_REVENUE'] != ""].iloc[:, column_numbers[k]]
 
             #stores_pp[k] =self.stores(pricing[k],units[k],column_numbers[k])
 
@@ -160,14 +161,14 @@ class transform():
             final[k] = pd.merge(details[k], stores_pp[k], how='inner', on='PARTNER_PRODUCT_CODE')
         
         
-        week = self.dictToFrame(final)
+        week = self.dict_to_frame(final)
 
         return week
 
-class export():
+class Export:
     def __init__(self):
         pass
 
-    def exportData(self,df,Output,FileName):
-        df.to_csv(Output+FileName,index=False, decimal=".", sep='|')
-        print(FileName,'was succesfully exported to', Output)
+    def export_data(self, df, output, file_name):
+        df.to_csv(output + file_name, index=False, decimal=".", sep='|')
+        print(file_name, 'was succesfully exported to', output)
