@@ -22,6 +22,7 @@ The pipeline consists of the following modules:
 - `transformation.py` contains all related classes and methods with the transformation, normalisation and export of the files.
 - `helpers.py` methods used throughout the code.
 - `settings.py` contains classes that read ".ini" files* and stored all ftp and local server paths, file names, week number, extensions, etc. Will delve into this later on in the README.
+- `quality_check.py` to perform quality on the final output of the process.
 - `main.py`
 
 ### What is missing?
